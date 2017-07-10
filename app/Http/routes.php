@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/company', 'CompanyController@index')->name('company');
 Route::get('/companydetail/{id}', 'CompanyController@show')->name('companydetail');
 Route::get('/companyinfo/{id}', 'CompanyController@edit')->name('companyinfo');
