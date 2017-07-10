@@ -18,3 +18,10 @@ Route::get('/', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+Route::get('/company', 'CompanyController@index')->name('company');
+Route::get('/companydetail/{id}', 'CompanyController@show')->name('companydetail');
+Route::get('/companyinfo/{id}', 'CompanyController@edit')->name('companyinfo');
+Route::post('/registerCompany', 'CompanyController@store')->name('registerCompany');
+Route::post('/updateCompany', 'CompanyController@update')->name('updateCompany');
+Route::get('/user/{id}', 'CompanyController@adduser')->name('user');
+Route::post('/companyUser', 'CompanyUsersController@store')->name('companyUser');

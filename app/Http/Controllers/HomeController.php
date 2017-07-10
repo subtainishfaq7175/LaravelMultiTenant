@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Companies;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -24,6 +26,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $companies = Companies::all();
+        foreach ($companies as $company){
+            $company->usercount = count(DB::table($company->db_name.'.users')->get());
+        }
+        return view('home', ['data' => $companies]);
     }
 }
