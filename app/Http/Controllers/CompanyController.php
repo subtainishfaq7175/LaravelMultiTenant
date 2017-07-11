@@ -133,4 +133,11 @@ class CompanyController extends Controller
         $companyInfo = Companies::find($id);
         return view('user.user',['data' => $companyInfo]);
     }
+
+    public function companyDelete(Request $request)
+    {
+        $delete = Companies::find($request->company_id);
+        return $delete->delete();
+
+    }
 }

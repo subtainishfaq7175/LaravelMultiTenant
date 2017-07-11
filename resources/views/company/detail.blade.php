@@ -55,7 +55,7 @@
                                             <span class="label label-danger">Deactive</span>
                                         @endif
                                     </th>
-                                    <th>Action</th>
+                                    <th><button type="button" id="{{ $data->id  }}-{{ $user->id  }}" class="btn btn-danger deleteCompanyUser">Delete</button></th>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -66,4 +66,26 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
+<script>
+    // A $( document ).ready() block.
+    $( document ).ready(function() {
+        // Event setup using a convenience method
+        $(".deleteCompanyUser").click(function() {
+            var r = confirm("Are you Sure you want to delete this User!");
+            if (r == true) {
+                $.ajax({
+                    url: "/companyUserDelete",
+                    type: "POST",
+                    data : {company_user_id : $(this).attr('id')}
+                }).done(function (responseData) {
+                    window.location.reload();
+                });
+            } else {
+                txt = "You pressed Cancel!";
+            }
+        });
+    });
+
+</script>
 @endsection

@@ -35,7 +35,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $company->usercount }}</td>
-                                    <td><a href="/companyinfo/{{ $company->id  }}"  class="btn btn-warning">Edit</a> &nbsp; <button type="button" class="btn btn-danger">Delete</button></td>
+                                    <td><a href="/companyinfo/{{ $company->id  }}"  class="btn btn-warning">Edit</a> &nbsp; <button type="button" id="{{ $company->id  }}" class="btn btn-danger deleteCompany">Delete</button></td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -45,4 +45,26 @@
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
+    <script>
+        // A $( document ).ready() block.
+        $( document ).ready(function() {
+            // Event setup using a convenience method
+            $(".deleteCompany").click(function() {
+                var r = confirm("Are you Sure you want to delete this Company!");
+                if (r == true) {
+                    $.ajax({
+                        url: "/companyDelete",
+                        type: "POST",
+                        data : {company_id : $(this).attr('id')}
+                    }).done(function (responseData) {
+                        window.location.reload();
+                    });
+                } else {
+                    txt = "You pressed Cancel!";
+                }
+            });
+        });
+
+    </script>
 @endsection

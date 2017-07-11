@@ -25,3 +25,5 @@ Route::post('/registerCompany', 'CompanyController@store')->name('registerCompan
 Route::post('/updateCompany', 'CompanyController@update')->name('updateCompany');
 Route::get('/user/{id}', 'CompanyController@adduser')->name('user');
 Route::post('/companyUser', 'CompanyUsersController@store')->name('companyUser');
+Route::post('/companyDelete', 'CompanyController@companyDelete')->name('companyDelete');
+Route::post('/companyUserDelete', 'CompanyUsersController@companyUserDelete')->name('companyUserDelete');
