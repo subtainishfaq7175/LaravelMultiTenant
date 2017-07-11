@@ -27,3 +27,8 @@ Route::get('/user/{id}', 'CompanyController@adduser')->name('user');
 Route::post('/companyUser', 'CompanyUsersController@store')->name('companyUser');
 Route::post('/companyDelete', 'CompanyController@companyDelete')->name('companyDelete');
 Route::post('/companyUserDelete', 'CompanyUsersController@companyUserDelete')->name('companyUserDelete');
+Route::get('/domain', 'DomainChecker@index')->name('domain');
+Route::post('/checkDomain', 'DomainChecker@domainChecker')->name('checkDomain');
+Route::get('/companylogin', 'DomainChecker@companyUserLogin')->name('companylogin');
+Route::post('/companylogin', 'DomainChecker@postCompanyLogin')->name('postCompanylogin');
+Route::get('/companyHome', 'DomainChecker@companyHome')->name('companyHome');

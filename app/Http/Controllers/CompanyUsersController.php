@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Companies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class CompanyUsersController extends Controller
 {
@@ -17,7 +18,7 @@ class CompanyUsersController extends Controller
             'role' => $request->role,
             'status' => $request->status,
             'email' => $request->email,
-            'password' => bcrypt($request->password_confirmation)
+            'password' => md5($request->password_confirmation)
         );
         $table = $request->domain.'.users';
         DB::table($table)->insert($data);
