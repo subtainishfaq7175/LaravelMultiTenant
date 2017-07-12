@@ -22,7 +22,7 @@ class DomainChecker extends Controller
 
     public function domainChecker(Request $request)
     {
-        $data = Companies::where('subdomain','=',$request->domain)->first()['db_name'];
+        $data = Companies::where('subdomain','=',$request->domain)->where('status','=',1)->first()['db_name'];
         if($data){
             return view('user.userlogin',['data' => $data ]);
         } else {
