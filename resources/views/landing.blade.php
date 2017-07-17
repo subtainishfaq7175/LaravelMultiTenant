@@ -11,7 +11,7 @@
                     Your Application's Landing Page.
                 </div>
 
-                @if(Session::has('login'))
+                @if(\Auth::user())
                 <a href="{{ url('/logout') }}" class="btn btn-primary">Logout</a>
                 @endif
             </div>

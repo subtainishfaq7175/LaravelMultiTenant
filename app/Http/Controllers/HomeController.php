@@ -27,9 +27,11 @@ class HomeController extends Controller
     public function index()
     {
         $companies = Companies::all();
-        foreach ($companies as $company){
-            $company->usercount = count(DB::table($company->db_name.'.users')->get());
-        }
+        try {
+            foreach ($companies as $company){
+                $company->usercount = count(DB::table($company->db_name.'.users')->get());
+            }
+        } catch (\Exception $e) {}
         return view('home', ['data' => $companies]);
     }
 }
