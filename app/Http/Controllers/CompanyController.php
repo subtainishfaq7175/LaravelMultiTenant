@@ -56,15 +56,7 @@ class CompanyController extends Controller
             DB::statement('CREATE DATABASE '.$db_name);
             $res = self::configureConnectionByName($db_name);
             $artisan = \Artisan::call('migrate', array('--database' => $db_name, '--env' => 'local', '--path' => 'database/tenants'));
-//            $mysqlTable = "CREATE TABLE ".$db_name.".users
-//            (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-//            username VARCHAR(30) NOT NULL,
-//            role VARCHAR(30) ,
-//            status VARCHAR(50),
-//            email VARCHAR(50),
-//            password VARCHAR(50),
-//            reg_date TIMESTAMP)";
-//            DB::statement($mysqlTable);
+
             return redirect()->route('home');
 
         } catch (\Exception $e) {

@@ -45,8 +45,6 @@ class DomainChecker extends Controller
         try{
             Auth::logout();
             $conn = self::configureConnectionByName($request->domain);
-            $this->user = new User();
-//            $user = $this->user->where('email', '=', $request->email)->first();
             $authenticate = Auth::attempt(['email' => $request->email, 'password' => $request->password]);
             if ($authenticate) {
                 return redirect()->route('companyHome');
