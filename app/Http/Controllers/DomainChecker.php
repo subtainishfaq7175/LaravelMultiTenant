@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 
+use App\User;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Companies;
 use Illuminate\Http\Request;
@@ -22,6 +25,7 @@ class DomainChecker extends Controller
 
     public function domainChecker(Request $request)
     {
+
         $data = Companies::where('subdomain','=',$request->domain)->where('status','=',1)->first()['db_name'];
         if($data){
             return view('user.userlogin',['data' => $data ]);
@@ -38,28 +42,36 @@ class DomainChecker extends Controller
 
     public function postCompanyLogin(Request $request)
     {
-        $validate_admin = DB::table($request->domain.'.users')
-            ->where('email', $request->email)
-            ->where('password',md5($request->password))
-            ->first();
-        if ($validate_admin) {
-            // here you know data is valid
-            $data = $request->session()->put('login', $validate_admin);
-            return redirect()->route('companyHome');
-        } else {
-            return redirect()->route('domain');
+        try{
+            Auth::logout();
+            $conn = self::configureConnectionByName($request->domain);
+            $this->user = new User();
+//            $user = $this->user->where('email', '=', $request->email)->first();
+            $authenticate = Auth::attempt(['email' => $request->email, 'password' => $request->password]);
+            if ($authenticate) {
+                return redirect()->route('companyHome');
+            } else {
+                return redirect()->route('domain');
+            }
+        } catch (\Exception $e) {
+            dd($e->getMessage());
         }
-        
     }
 
     public function companyHome(Request $request)
     {
-        if(Session::has('login')){
+        if(Auth::user()){
             return view('landing');
         } else {
             return redirect()->route('domain');
         }
 
+    }
+
+    public function configureConnectionByName($tenantName){
+        $config = App::make('config');
+        $config->set('database.connections.mysql.database', $tenantName);
+        return $config->get('database.connections');
     }
 
 }

@@ -18,7 +18,7 @@ class CompanyUsersController extends Controller
             'role' => $request->role,
             'status' => $request->status,
             'email' => $request->email,
-            'password' => md5($request->password_confirmation)
+            'password' => bcrypt($request->password_confirmation)
         );
         $table = $request->domain.'.users';
         DB::table($table)->insert($data);
