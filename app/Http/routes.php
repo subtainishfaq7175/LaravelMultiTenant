@@ -17,18 +17,87 @@ Route::get('/', function () {
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/company', 'CompanyController@index')->name('company');
-Route::get('/companydetail/{id}', 'CompanyController@show')->name('companydetail');
-Route::get('/companyinfo/{id}', 'CompanyController@edit')->name('companyinfo');
-Route::post('/registerCompany', 'CompanyController@store')->name('registerCompany');
-Route::post('/updateCompany', 'CompanyController@update')->name('updateCompany');
-Route::get('/user/{id}', 'CompanyController@adduser')->name('user');
-Route::post('/companyUser', 'CompanyUsersController@store')->name('companyUser');
-Route::post('/companyDelete', 'CompanyController@companyDelete')->name('companyDelete');
-Route::post('/companyUserDelete', 'CompanyUsersController@companyUserDelete')->name('companyUserDelete');
-Route::get('/domain', 'DomainChecker@index')->name('domain');
-Route::post('/checkDomain', 'DomainChecker@domainChecker')->name('checkDomain');
-Route::get('/companylogin', 'DomainChecker@companyUserLogin')->name('companylogin');
-Route::post('/companylogin', 'DomainChecker@postCompanyLogin')->name('postCompanylogin');
-Route::get('/companyHome', 'DomainChecker@companyHome')->name('companyHome');
+Route::get('/home', [
+    'as' => 'home',
+    'uses' => 'HomeController@index'
+]);
+
+Route::get('/company', [
+    'as' => 'company',
+    'uses' => 'CompanyController@index'
+]);
+
+Route::get('/companydetail/{id}', [
+    'as' => 'companydetail',
+    'uses' => 'CompanyController@show'
+]);
+
+Route::get('/companyinfo/{id}', [
+    'as' => 'companyinfo',
+    'uses' => 'CompanyController@edit'
+]);
+
+Route::get('/domain', [
+    'as' => 'domain',
+    'uses' => 'DomainChecker@index'
+]);
+
+Route::get('/user/{id}', [
+    'as' => 'user',
+    'uses' => 'CompanyController@adduser'
+]);
+
+Route::get('/companylogin', [
+    'as' => 'companylogin',
+    'uses' => 'DomainChecker@companyUserLogin'
+]);
+
+// Post Routes
+
+Route::post('/registerCompany', [
+    'as' => 'registerCompany',
+    'uses' => 'CompanyController@store'
+]);
+
+Route::post('/updateCompany', [
+    'as' => 'updateCompany',
+    'uses' => 'CompanyController@update'
+]);
+
+Route::post('/companyUser', [
+    'as' => 'companyUser',
+    'uses' => 'CompanyUsersController@store'
+]);
+
+Route::post('/companyDelete', [
+    'as' => 'companyDelete',
+    'uses' => 'CompanyController@companyDelete'
+]);
+
+Route::post('/companyUserDelete', [
+    'as' => 'companyUserDelete',
+    'uses' => 'CompanyUsersController@companyUserDelete'
+]);
+
+Route::post('/checkDomain', [
+    'as' => 'checkDomain',
+    'uses' => 'DomainChecker@domainChecker'
+]);
+
+Route::post('/companylogin', [
+    'as' => 'postCompanylogin',
+    'uses' => 'DomainChecker@postCompanyLogin'
+]);
+
+
+Route::group(['middleware' => 'setDbConn'], function (){
+    Route::get('/companyHome', [
+        'as' => 'companyHome',
+        'uses' => 'DomainChecker@companyHome'
+    ]);
+
+    Route::post('/saveLog', [
+        'as' => 'saveLog',
+        'uses' => 'CompanyUsersController@saveLog'
+    ]);
+});

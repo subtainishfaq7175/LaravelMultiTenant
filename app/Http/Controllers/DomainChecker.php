@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\log;
 use App\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,10 @@ use Illuminate\Support\Facades\Session;
 
 class DomainChecker extends Controller
 {
-    //
+    function __construct(){
+        $this->log = new log();
+    }
+
     public function index()
     {
         //
@@ -25,10 +29,10 @@ class DomainChecker extends Controller
 
     public function domainChecker(Request $request)
     {
-
-        $data = Companies::where('subdomain','=',$request->domain)->where('status','=',1)->first()['db_name'];
+        $data = Companies::where('subdomain','=',$request->domain)->where('status','=',1)->first();
         if($data){
-            return view('user.userlogin',['data' => $data ]);
+            session(['company' => $data]);
+            return view('user.userlogin',['data' => $data->db_name ]);
         } else {
             return redirect()->route('domain');
         }
@@ -59,11 +63,11 @@ class DomainChecker extends Controller
     public function companyHome(Request $request)
     {
         if(Auth::user()){
-            return view('landing');
+            $logs = $this->log->getAllLogs();
+            return view('landing')->with('logs', $logs);
         } else {
             return redirect()->route('domain');
         }
-
     }
 
     public function configureConnectionByName($tenantName){
