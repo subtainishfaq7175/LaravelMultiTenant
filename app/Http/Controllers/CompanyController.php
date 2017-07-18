@@ -14,7 +14,7 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -25,22 +25,22 @@ class CompanyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Support\Facades\Redirect
      */
     public function store(Request $request)
     {
         try {
             $companyObj = new Companies();
             $companyObj->name = $request->name;
-            $companyObj->subdomain = self::clean($request->subdomain);
+            $companyObj->subdomain = self::clean($request->subdomain);  // Removing user provided sub-domain name from all special characters and replacing them with .
             $db_name = str_replace(".","_",$request->subdomain);
             $companyObj->db_name = $db_name;
             $companyObj->status = $request->status;
             $companyObj->save();
 
-            DB::statement('CREATE DATABASE '.$db_name);
-            $res = self::configureConnectionByName($db_name);
-            $artisan = \Artisan::call('migrate', array('--database' => $db_name, '--env' => 'local', '--path' => 'database/tenants'));
+            DB::statement('CREATE DATABASE '.$db_name); // Creating new Database
+            $res = self::configureConnectionByName($db_name); // Changing connection from main database to newly created database
+            $artisan = \Artisan::call('migrate', array('--database' => $db_name, '--env' => 'local', '--path' => 'database/tenants')); // Calling php artisan migrate command to create new tables in company database
             return redirect()->route('home');
         } catch (\Exception $e) {
             dd($e);
@@ -52,7 +52,7 @@ class CompanyController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function show($id)
     {
@@ -65,7 +65,7 @@ class CompanyController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit($id)
     {
@@ -77,8 +77,7 @@ class CompanyController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Support\Facades\Redirect
      */
     public function update(Request $request)
     {
@@ -90,12 +89,24 @@ class CompanyController extends Controller
         return redirect()->route('home');
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\View\View
+     */
     public function adduser($id)
     {
         $companyInfo = Companies::find($id);
         return view('user.user',['data' => $companyInfo]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Database\Eloquent\SoftDeletes
+     */
     public function companyDelete(Request $request)
     {
         $delete = Companies::find($request->company_id);
@@ -111,7 +122,6 @@ class CompanyController extends Controller
     public function configureConnectionByName($tenantName){
         // Just get access to the config.
         $config = App::make('config');
-        //dd($config);
 
         // Will contain the array of connections that appear in our database config file.
         $connections = $config->get('database.connections');
@@ -128,6 +138,12 @@ class CompanyController extends Controller
         App::make('config')->set('database.connections.'.$tenantName, $newConnection);
     }
 
+    /**
+     * Clean a string from all special characters and replace them with .
+     *
+     * @param  string $string
+     * @return string
+     */
     public function clean($string) {
         $string = str_replace(' ', '.', $string);
         $string = preg_replace('/[^A-Za-z0-9\-ığşçöüÖÇŞİıĞ]/', '.', $string);

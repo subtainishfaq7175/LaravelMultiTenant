@@ -15,6 +15,12 @@ class CompanyUsersController extends Controller
         $this->log = new log();
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Support\Facades\Redirect
+     */
     public function store(Request $request)
     {
         $data = array(
@@ -29,6 +35,12 @@ class CompanyUsersController extends Controller
         return redirect()->route('home');
     }
 
+    /**
+     * Delete a company user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function companyUserDelete(Request $request)
     {
         $data = explode('-',$request->company_user_id);
@@ -41,8 +53,14 @@ class CompanyUsersController extends Controller
         return $deleteUserFromCompany;
     }
 
+    /**
+     * Save a log for Company User
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Support\Facades\Redirect
+     */
     public function saveLog(Request $request){
         $log = $this->log->saveLog($request);
-        dd($log);
+        return redirect()->back();
     }
 }
