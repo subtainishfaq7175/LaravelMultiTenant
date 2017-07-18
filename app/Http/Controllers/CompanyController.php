@@ -18,18 +18,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
         return view('company.company');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -40,10 +29,7 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-
-
-        try{
-
+        try {
             $companyObj = new Companies();
             $companyObj->name = $request->name;
             $companyObj->subdomain = self::clean($request->subdomain);
@@ -51,14 +37,11 @@ class CompanyController extends Controller
             $companyObj->db_name = $db_name;
             $companyObj->status = $request->status;
             $companyObj->save();
-            //
 
             DB::statement('CREATE DATABASE '.$db_name);
             $res = self::configureConnectionByName($db_name);
             $artisan = \Artisan::call('migrate', array('--database' => $db_name, '--env' => 'local', '--path' => 'database/tenants'));
-
             return redirect()->route('home');
-
         } catch (\Exception $e) {
             dd($e);
             return $e->getMessage();
@@ -73,7 +56,6 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        //
         $companyInfo = Companies::find($id);
         $users = DB::table($companyInfo->db_name.'.users')->get();
         return view('company.detail',['data' => $companyInfo,'users' => $users ]);
@@ -87,7 +69,6 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        //
         $companyInfo = Companies::find($id);
         return view('company.edit',['data' => $companyInfo]);
     }
@@ -101,7 +82,6 @@ class CompanyController extends Controller
      */
     public function update(Request $request)
     {
-        //
         $companyInfo = Companies::find($request->id);
         $companyInfo->name = $request->name;
         $companyInfo->subdomain = $request->subdomain;
@@ -110,31 +90,8 @@ class CompanyController extends Controller
         return redirect()->route('home');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function setDBConnection()
-    {
-        Config::set('database.connections.dynamicConnection.database', 'fine_vbase_com');
-        Config::set('database.default', 'dynamicConnection');
-        DB::purge('dynamicConnection');
-        DB::reconnect('dynamicConnection');
-        return DB::connection('dynamicConnection');
-
-    }
-
-
     public function adduser($id)
     {
-        //
         $companyInfo = Companies::find($id);
         return view('user.user',['data' => $companyInfo]);
     }
@@ -143,7 +100,6 @@ class CompanyController extends Controller
     {
         $delete = Companies::find($request->company_id);
         return $delete->delete();
-
     }
 
     /**
@@ -175,7 +131,6 @@ class CompanyController extends Controller
     public function clean($string) {
         $string = str_replace(' ', '.', $string);
         $string = preg_replace('/[^A-Za-z0-9\-ığşçöüÖÇŞİıĞ]/', '.', $string);
-
         return preg_replace('/-+/', '.', $string);
     }
 }

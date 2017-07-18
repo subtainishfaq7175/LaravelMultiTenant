@@ -23,7 +23,6 @@ class DomainChecker extends Controller
 
     public function index()
     {
-        //
         return view('domain');
     }
 
@@ -41,7 +40,6 @@ class DomainChecker extends Controller
     public function companyUserLogin()
     {
         return view('user.userlogin');
-        
     }
 
     public function postCompanyLogin(Request $request)
@@ -53,6 +51,7 @@ class DomainChecker extends Controller
             if ($authenticate) {
                 return redirect()->route('companyHome');
             } else {
+                session(['company' => null]);
                 return redirect()->route('domain');
             }
         } catch (\Exception $e) {
